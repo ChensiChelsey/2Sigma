@@ -5,9 +5,9 @@ This project implement deep learning on handwriting mathmetic equation recogniti
 1. OpenCV
 <br>install OpenCV: https://pypi.python.org/pypi/opencv-python
 <br>For Mac:
-      brew tap homebrew/science
-      brew install opencv
-      export PYTHONPATH=/usr/local/lib/python2.7/site-packages:$PYTHONPATH
+      brew tap homebrew/science<br>
+      brew install opencv<br>
+      export PYTHONPATH=/usr/local/lib/python2.7/site-packages:$PYTHONPATH<br>
 1. Numpy
 1. Scipy
 1. PIL (Pillow)
