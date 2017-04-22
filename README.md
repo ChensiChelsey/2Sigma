@@ -1,5 +1,2 @@
 # Overview
-
-Please refer to the [2 sigma project](https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries#description)
-
-Collaborator: cxc
+This project implement deep learning on handwriting mathmetic equation recognition using (CNN) convolutional neural network.
