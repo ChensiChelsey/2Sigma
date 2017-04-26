@@ -132,6 +132,7 @@ def connect(im, res):
 
 # draw boxes on image
 def drawBoxes(im, boxes):
+    ''' draw boxes on im'''
     for (left, right) in boxes:
         print([left, right])
         cv2.rectangle(im, left, right, (0,255,0), 2)
