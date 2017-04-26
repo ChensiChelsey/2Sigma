@@ -140,8 +140,8 @@ def drawBoxes(im, boxes):
 # run the code
 def main():
     im = cv2.imread("./test_1.png")  # specify the image to process
-    rawRes = rawBoundingBoxes(im)  # raw bounding boxes
-    finalRes = connect(im, rawRes)  # connect i, division mark, equation mark, ellipsis
+    rawRes = rawBoundingBoxes(im)
+    finalRes = connect(im, rawRes)
     drawBoxes(im, finalRes)
     Image.fromarray(im).show()  # show image
     #result.save("test.png")
