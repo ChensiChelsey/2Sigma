@@ -131,7 +131,7 @@ def connect(im, res):
     for (left, right) in finalRes:
         print([left, right])
         cv2.rectangle(im, left, right, (0,255,0), 2)
-    return im
+    return finalRes
 
 # run the code
 def main():
