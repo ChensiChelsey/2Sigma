@@ -11,3 +11,14 @@ This project implement deep learning on handwriting mathmetic equation recogniti
 1. Numpy
 1. Scipy
 1. PIL (Pillow)
+
+
+# Explanation
+  preSymbol.py : to label each picture (exclude equation) and divide it into
+  train and test data for models.
+  its format: "images" -> "file_name" : its value(picture)
+              "labels" -> "file_name" : its label (integer decided by rules)
+
+  getSymbol.py : get pictures for train and test data and their labels
+
+  
