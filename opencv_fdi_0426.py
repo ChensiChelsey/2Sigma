@@ -128,16 +128,20 @@ def connect(im, res):
         finalRes.append(res[i])
         i += 1
 
-    for (left, right) in finalRes:
+    return finalRes
+
+# draw boxes on image
+def drawBoxes(im, boxes):
+    for (left, right) in boxes:
         print([left, right])
         cv2.rectangle(im, left, right, (0,255,0), 2)
-    return finalRes
 
 # run the code
 def main():
     im = cv2.imread("./test_1.png")  # specify the image to process
-    res = rawBoundingBoxes(im)  # raw bounding boxes
-    im = connect(im, res)  # connect i, division mark, equation mark, ellipsis
+    rawRes = rawBoundingBoxes(im)  # raw bounding boxes
+    finalRes = connect(im, rawRes)  # connect i, division mark, equation mark, ellipsis
+    drawBoxes(im, finalRes)
     Image.fromarray(im).show()  # show image
     #result.save("test.png")
 
