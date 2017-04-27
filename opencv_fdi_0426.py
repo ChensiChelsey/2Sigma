@@ -71,7 +71,8 @@ def isDots(boundingBox, boundingBox1, boundingBox2):
     (x, y), (xw, yh) = boundingBox
     (x1, y1), (xw1, yh1) = boundingBox1
     (x2, y2), (xw2, yh2) = boundingBox2
-    return (isDot(boundingBox) and isDot(boundingBox1) and isDot(boundingBox2) and abs(max(yh, yh1, yh2, y, y1, y2) - min(yh, yh1, yh2, y, y1, y2)) < 20)  # 20 is a migical number
+    return (isDot(boundingBox) and isDot(boundingBox1) and isDot(boundingBox2)
+            and abs(max(yh, yh1, yh2, y, y1, y2) - min(yh, yh1, yh2, y, y1, y2)) < 20)  # 20 is a migical number
 
 # return raw bounding boxes of input image
 def rawBoundingBoxes(im):
