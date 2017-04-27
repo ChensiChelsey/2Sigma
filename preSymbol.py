@@ -9,13 +9,13 @@ import numpy as np
 sy = ['dots', 'tan', ')', '(', '+', '-', 'sqrt', '1', '0', '3', '2', '4', '6', 'mul', 'pi', '=', 'sin', 'pm', 'A',
 'frac', 'cos', 'delta', 'a', 'c', 'b', 'bar', 'd', 'f', 'i', 'h', 'k', 'm', 'o', 'n', 'p', 's', 't', 'y', 'x', 'div']
 rules = {}
-brules = {}
-lst = [0] * 40
+# brules = {}
+lst = [float(0)] * 40
 for i in range(0,len(sy)):
-    lst[i] = 1
+    lst[i] = float(1)
     rules[sy[i]] = lst[:]
-    brules[''.join(str(e) for e in lst)] = sy[i]
-    lst[i] = 0
+    # brules[i] = sy[i]
+    lst[i] = float(0)
 # print rules
 #later we can do some merge rules: 0 and o, frac and bar and -, x and mul
 #rules['o'] = rules['0']
@@ -67,7 +67,9 @@ def processImage(image_name):
         newImage.paste(img, (wleft, 0)) #paste resized image on white canvas
 
     # newImage.save("./annotated_28x28/"+tail, quality=100)
-    return newImage
+    tv = list(newImage.getdata())
+    tva = [x * 1.0/255.0 for x in tv]
+    return tva
 
 def marklabel(f):
    ins = f.split('.')[0].split('_')
@@ -79,7 +81,7 @@ def marklabel(f):
              symbol_train[f] = rules[ins[3]]
              symbol[f] = symbol_train[f]
              image = processImage(f)
-             image = np.reshape(image, (784))
+            #  image = np.reshape(image, (784))
              images_train[f] = image
              images[f] = images_train[f]
          else:
@@ -92,7 +94,7 @@ def marklabel(f):
             #     'mode':im.mode
             #  }
              image = processImage(f)
-             image = np.reshape(image, (784))
+            #  image = np.reshape(image, (784))
              images_test[f] = image
              images[f] = images_test[f]
 

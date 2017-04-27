@@ -4,6 +4,12 @@ from PIL import Image, ImageFilter
 import os
 import pickle
 
+sy = ['dots', 'tan', ')', '(', '+', '-', 'sqrt', '1', '0', '3', '2', '4', '6', 'mul', 'pi', '=', 'sin', 'pm', 'A',
+'frac', 'cos', 'delta', 'a', 'c', 'b', 'bar', 'd', 'f', 'i', 'h', 'k', 'm', 'o', 'n', 'p', 's', 't', 'y', 'x', 'div']
+brules = {}
+for i in range(0,len(sy)):
+    brules[i] = sy[i]
+
 def predictint():
     # Define the model (same as when creating the model file)
     x = tf.placeholder(tf.float32, [None, 784])
@@ -60,27 +66,30 @@ def predictint():
         #print ("Model restored.")
         nf = open("result.txt", 'w')
         tfile = open("test.pkl","rb")
+        nnfile = open("undesired.txt",'w')
         data = pickle.load(tfile)
 
+        number = 0
+        hit = 0
         for f in data["images"]:
             # print (fn)
 
-            prediction=tf.argmax(y_conv)
+            prediction=tf.argmax(y_conv,1)
             predint = prediction.eval(feed_dict={x: [data["images"][f]],keep_prob: 1.0}, session=sess)
-            print f
-            print predint
-            nf.write("%s\t%s\n" %(f,predint))
+            # print f
+            # print brules[predint[0]]
+            nf.write("%s\t%s\n" %(f,brules[predint[0]]))
+            ins = f.split('.')[0].split('_')
+            if brules[predint[0]] == ins[3]:
+                hit = hit +1
+            else:
+                nnfile.write("%s\t%s\n" %(f,brules[predint[0]]))
+            number = number + 1
                 # print f, (predint[0]) #first value in list
-        # number = 0
-        # hit = 0
-        # with open("annotation.txt") as ff:
-        #     lines = ff.readlines()
-        #     for line in lines:
-        #         if line in set_results:
-        #             hit = hit + 1
-        #         number = number + 1
-        # print "see result is in result.txt"
-        # print "Accuracy is ", (hit/float(number))
+        nf.close()
+
+        print "see result is in result.txt"
+        print "Accuracy is ", (hit/float(number))
 
 # def imageprepare(argv):
 #     im = Image.open(argv).convert('L')

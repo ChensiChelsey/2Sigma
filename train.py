@@ -1,6 +1,7 @@
 import tensorflow as tf
 import pickle
 import random
+import numpy as np
 #read data
 pfile = open("train.pkl","rb")
 data = pickle.load(pfile)
@@ -75,8 +76,11 @@ for i in range(5000):
   for batchd in batch:
       batch_x.append(data["images"][batchd])
       batch_y.append(data["labels"][batchd])
-  # print batch_y
+  # print batch_x[2]
+  # print batch_y[2]
   if i%100 == 0:
+      print batch_x[2]
+      print batch_y[2]
     #   print 1
       train_accuracy = accuracy.eval(feed_dict={x:batch_x, y_: batch_y, keep_prob: 1.0})
       print("step %d, training accuracy %g"%(i, train_accuracy))
