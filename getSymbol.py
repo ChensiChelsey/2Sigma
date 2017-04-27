@@ -14,8 +14,9 @@ def gettrainsymbol():
 
     for f in images_train:
         image = images_train[f]
-        im = Image.frombytes(**image)
-        im.save(data_train_root+f)
+        # im = Image.frombytes(**image)
+        # im.save(data_train_root+f)
+        image.save(data_test_root+f)
         lfile.write(f+ " "+ str(label_train[f])+"\n")
 
     lfile.close()
@@ -29,8 +30,9 @@ def gettestsymbol():
 
     for f in images_test:
         image = images_test[f]
-        im = Image.frombytes(**image)
-        im.save(data_test_root+f)
+        # im = Image.frombytes(**image)
+        image.save(data_test_root+f)
+        # im.save(data_test_root+f)
         lfile.write(f+ " "+ str(label_test[f])+"\n")
 
     lfile.close()
