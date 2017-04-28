@@ -9,14 +9,14 @@ def gettrainsymbol():
     pfile = open("train.pkl","rb")
     lfile = open(data_train_root + "lable.txt", "wb")
     data_train = pickle.load(pfile)
-    images_train = data_train["images"]
+    images_train = data_train["images2D"]
     label_train = data_train["labels"]
 
     for f in images_train:
         image = images_train[f]
         # im = Image.frombytes(**image)
         # im.save(data_train_root+f)
-        image.save(data_test_root+f)
+        image.save(data_train_root+f)
         lfile.write(f+ " "+ str(label_train[f])+"\n")
 
     lfile.close()
@@ -25,7 +25,7 @@ def gettestsymbol():
     pfile = open("test.pkl","rb")
     lfile = open(data_test_root + "lable.txt", "wb")
     data_test = pickle.load(pfile)
-    images_test = data_test["images"]
+    images_test = data_test["images2D"]
     label_test = data_test["labels"]
 
     for f in images_test:
