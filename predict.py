@@ -80,7 +80,14 @@ def predictint():
             # print brules[predint[0]]
             nf.write("%s\t%s\n" %(f,brules[predint[0]]))
             ins = f.split('.')[0].split('_')
-            if brules[predint[0]] == ins[3]:
+            label = ins[3]
+            if ins[3] == "o":
+                label = "0"
+            if ins[3] == "frac" or ins[3] == "bar":
+                label = "-"
+            if ins[3] == "mul":
+                label = "x"
+            if brules[predint[0]] == label:
                 hit = hit +1
             else:
                 nnfile.write("%s\t%s\n" %(f,brules[predint[0]]))
