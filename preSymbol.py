@@ -18,13 +18,13 @@ for i in range(0,len(sy)):
     lst[i] = float(0)
 # print rules
 #later we can do some merge rules: 0 and o, frac and bar and -, x and mul
-#rules['o'] = rules['0']
-#rules['frac'] = rules['-']
-#rules['bar'] = rules['-']
-#rules['x'] = rules['mul']
+rules['o'] = rules['0']
+rules['frac'] = rules['-']
+rules['bar'] = rules['-']
+rules['mul'] = rules['x']
 
 pp = pprint.PrettyPrinter(indent=4)
-dataroot = os.getcwd() + "/data/annotated/"
+dataroot = os.getcwd() + "/data/annotated_train/"
 symbol_test = {}
 images_test = {}
 images_test2D = {}

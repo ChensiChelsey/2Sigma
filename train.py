@@ -79,8 +79,8 @@ for i in range(5000):
   # print batch_x[2]
   # print batch_y[2]
   if i%100 == 0:
-      print batch_x[2]
-      print batch_y[2]
+    #   print batch_x[2]
+    #   print batch_y[2]
     #   print 1
       train_accuracy = accuracy.eval(feed_dict={x:batch_x, y_: batch_y, keep_prob: 1.0})
       print("step %d, training accuracy %g"%(i, train_accuracy))
