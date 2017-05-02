@@ -101,7 +101,7 @@ def predictint():
 
             updated_symbol_list = update(test_data, test_symbol_list)
             for updated_symbol in updated_symbol_list:
-                updated_nf.write("\t%s\t[%d, %d, %d, %d]\n" %(updated_symbol[0], updated_symbol[1], updated_symbol[2], updated_symbol[3], updated_symbol[4]))
+                updated_nf.write("\t%s\t[%d, %d, %d, %d]\n" %(updated_symbol[0], updated_symbol[1], updated_symbol[2], updated_symbol[3], updated_symbol[4])) # write the result
 
             equation = toLatex(updated_symbol_list)
             updated_nf.write("%s\n" %(equation)) # write the result
@@ -236,7 +236,7 @@ def update(im_name, symbol_list):
                 res == 'i'
             elif pm:
                 res == 'pm'
-            finalRes.append((res, min(x, x1), min(y, y1)), (max(xw, xw1), max(yh, yh1)))
+            finalRes.append((res, min(x, x1), min(y, y1), (max(xw, xw1), max(yh, yh1)))
             i += 2
         else:
             finalRes.append((res, x, y, xw, yh))
