@@ -110,7 +110,7 @@ def predictint():
 
         print "see result is in result.txt"
         print "see result is in updated_result.txt"
-#         print "Accuracy is ", (hit/float(number))
+#        print "Accuracy is ", (hit/float(number))
 
 def isDot(boundingBox):
     (x, y), (xw, yh) = boundingBox
@@ -152,7 +152,7 @@ def isDivisionMark(boundingBox, boundingBox1, boundingBox2, res, res1, res2):
     caseBase = (res == '-' and isDot(boundingBox1) and isDot(boundingBox2))
     caseRelation = x < x1 < xw1 < xw and x < x2 < xw2 < xw # and max(cenY1, cenY2) > yh and min(cenY1, cenY2) < y
     #caseDistance = max(cenY1, cenY2) - min(cenY1, cenY2) < 1.5 * abs(yh - y)
-    return caseBase and caseRelation and caseDistance
+    return caseBase and caseRelation # and caseDistance
 
 # detect if input two boundingBoxes are a lowercase i
 def isLetterI(boundingBox, boundingBox1, res, res1):
