@@ -190,6 +190,7 @@ def isPM(boundingBox, boundingBox1, res, res1):
 def update(im_name, symbol_list):
     # symbol = <PIL.Image.Image image mode=RGB size=79x69 at 0x115BB3CD0>, 'c', 1145, 46, 1224, 115
     # output: list of (res, x, y, xw, yh)
+    symbol_list = sorted(symbol_list, key = lambda box: box[1])
     im = Image.open(im_name)
     list_len = len(symbol_list)
 
