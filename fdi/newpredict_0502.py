@@ -136,7 +136,6 @@ def imageprepare(image):
 
 # detect if input three boundingBoxes are a division mark
 def isDivisionMark(boundingBox, boundingBox1, boundingBox2, res, res1, res2):
-    boundingBox, boundingBox1, boundingBox2 = sorted([boundingBox, boundingBox1, boundingBox2], key = lambda box: box[0][0])
     (x, y), (xw, yh) = boundingBox
     (x1, y1), (xw1, yh1) = boundingBox1
     (x2, y2), (xw2, yh2) = boundingBox2
@@ -145,9 +144,8 @@ def isDivisionMark(boundingBox, boundingBox1, boundingBox2, res, res1, res2):
     cenY1 = min(y1, yh1) + abs(yh1 - y1) / 2
     cenY2 = min(y2, yh2) + abs(yh2 - y2) / 2
     caseBase = (res == '-' and res1 == 'dot' and res2 == 'dot')
-    caseBase1 = res == '-'  and (xw1 - x1) < abs(xw - x)/2 and (xw2 - x2) < abs(xw - x)/2
     caseRelation = x < x1 < xw1 < xw and x < x2 < xw2 < xw and max(cenY1, cenY2) > yh and min(cenY1, cenY2) < y
-    caseDistance = max(cenY1, cenY2) - min(cenY1, cenY2) < 1.5 * abs(xw - x)
+    caseDistance = max(cenY1, cenY2) - min(cenY1, cenY2) < 1.5 * abs(yh - y)
     return (caseBase or caseBase1) and caseRelation and caseDistance
 
 # detect if input two boundingBoxes are a lowercase i
