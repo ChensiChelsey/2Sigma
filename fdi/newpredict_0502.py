@@ -149,7 +149,7 @@ def isDivisionMark(boundingBox, boundingBox1, boundingBox2, res, res1, res2):
     cenY1 = min(y1, yh1) + abs(yh1 - y1) / 2
     cenY2 = min(y2, yh2) + abs(yh2 - y2) / 2
     #caseBase = (res == '-' and res1 == 'dot' and res2 == 'dot')
-    caseBase = (res == '-' and isDot(boundingBox1) and isDot(boundingBox2))
+    caseBase = (res == '-' and (isDot(boundingBox1) or res1 == 'dot') and (isDot(boundingBox2) or res2 == 'dot'))
     caseRelation = x < x1 < xw1 < xw and x < x2 < xw2 < xw # and max(cenY1, cenY2) > yh and min(cenY1, cenY2) < y
     #caseDistance = max(cenY1, cenY2) - min(cenY1, cenY2) < 1.5 * abs(yh - y)
     return caseBase and caseRelation # and caseDistance
