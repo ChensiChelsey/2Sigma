@@ -200,7 +200,7 @@ def update(im_name, symbol_list):
 
         equation = False
         letterI = False
-        pm = isPM(res[i], res[i+1])
+        pm = False
         divisionMark = False
         dots = False
         fraction = False
