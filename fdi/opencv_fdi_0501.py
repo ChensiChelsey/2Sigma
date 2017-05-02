@@ -40,11 +40,13 @@ def isDivisionMark(boundingBox, boundingBox1, boundingBox2):
     (x, y), (xw, yh) = boundingBox
     (x1, y1), (xw1, yh1) = boundingBox1
     (x2, y2), (xw2, yh2) = boundingBox2
+    cenX1 = min(x1, xw1) + abs(xw1 - x1) / 2
+    cenX2 = min(x2, xw2) + abs(xw2 - x2) / 2
     cenY1 = min(y1, yh1) + abs(yh1 - y1) / 2
     cenY2 = min(y2, yh2) + abs(yh2 - y2) / 2
     caseBase = isHorizontalBar(boundingBox) and isDot(boundingBox1) and isDot(boundingBox2)
     caseBase1 = isHorizontalBar(boundingBox) and (xw1 - x1) < abs(xw - x)/2 and (xw2 - x2) < abs(xw - x)/2
-    caseRelation = x < x1 < xw and x < max(cenY1, cenY2) < xw and max(cenY1, cenY2) > y and min(cenY1, cenY2) < y
+    caseRelation = x < x1 < xw1 < xw and x < x2 < xw2 < xw and max(cenY1, cenY2) > yh and min(cenY1, cenY2) < y
     caseDistance = max(cenY1, cenY2) - min(cenY1, cenY2) < 1.5 * abs(xw - x)
     return (caseBase or caseBase1) and caseRelation and caseDistance
 
