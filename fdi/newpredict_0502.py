@@ -146,7 +146,7 @@ def isDivisionMark(boundingBox, boundingBox1, boundingBox2, res, res1, res2):
     caseBase = (res == '-' and res1 == 'dot' and res2 == 'dot')
     caseRelation = x < x1 < xw1 < xw and x < x2 < xw2 < xw and max(cenY1, cenY2) > yh and min(cenY1, cenY2) < y
     caseDistance = max(cenY1, cenY2) - min(cenY1, cenY2) < 1.5 * abs(yh - y)
-    return (caseBase or caseBase1) and caseRelation and caseDistance
+    return caseBase and caseRelation and caseDistance
 
 # detect if input two boundingBoxes are a lowercase i
 def isLetterI(boundingBox, boundingBox1, res, res1):
