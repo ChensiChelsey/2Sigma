@@ -239,7 +239,7 @@ def update(im_name, symbol_list):
                 res = 'i'
             elif pm:
                 res = 'pm'
-            finalRes.append((res, min(x, x1), min(y, y1), (max(xw, xw1), max(yh, yh1)))
+            finalRes.append((res, min(x, x1), min(y, y1), max(xw, xw1), max(yh, yh1)))
             i += 2
         else:
             finalRes.append((res, x, y, xw, yh))
