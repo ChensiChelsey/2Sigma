@@ -227,7 +227,7 @@ def update(im_name, symbol_list):
                 res == 'div'
             elif dots:
                 res = 'dots'
-            finalRes.append((res, min(x, x1, x2), min(y, y1, y2), max(xw, xw1, xw2), max(yh, yh1, yh2))
+            finalRes.append((res, min(x, x1, x2), min(y, y1, y2), max(xw, xw1, xw2), max(yh, yh1, yh2)))
             i += 3
         elif (equation or letterI or pm):
             if equation:
