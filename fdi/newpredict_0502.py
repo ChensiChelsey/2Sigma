@@ -189,7 +189,7 @@ def isPM(boundingBox, boundingBox1, res, res1):
 
 def update(im_name, symbol_list):
     # symbol = <PIL.Image.Image image mode=RGB size=79x69 at 0x115BB3CD0>, 'c', 1145, 46, 1224, 115
-    # output: list of: (res, x, y, xw, yh)
+    # output: list of (res, x, y, xw, yh)
     im = Image.open(im_name)
     list_len = len(symbol_list)
 
@@ -227,7 +227,7 @@ def update(im_name, symbol_list):
                 res == 'div'
             elif dots:
                 res = 'dots'
-            finalRes.append((res, min(x, x1, x2), min(y, y1, y2)), (max(xw, xw1, xw2), max(yh, yh1, yh2))
+            finalRes.append((res, min(x, x1, x2), min(y, y1, y2), max(xw, xw1, xw2), max(yh, yh1, yh2))
             i += 3
         elif (equation or letterI or pm):
             if equation:
@@ -236,7 +236,7 @@ def update(im_name, symbol_list):
                 res == 'i'
             elif pm:
                 res == 'pm'
-            finalRes.append((res, min(x, x1), min(y, y1)), (max(xw, xw1), max(yh, yh1))
+            finalRes.append((res, min(x, x1), min(y, y1)), (max(xw, xw1), max(yh, yh1)))
             i += 2
         else:
             finalRes.append((res, x, y, xw, yh))
