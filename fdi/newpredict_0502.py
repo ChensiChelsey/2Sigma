@@ -152,7 +152,7 @@ def isDivisionMark(boundingBox, boundingBox1, boundingBox2, res, res1, res2):
 def isLetterI(boundingBox, boundingBox1, res, res1):
     (x, y), (xw, yh) = boundingBox
     (x1, y1), (xw1, yh1) = boundingBox1
-    return (((res == 'dot' and res1 == '1' or (res1 == 'dot' and res == '1'))
+    return (((res == 'dot' and res1 == '1') or (res1 == 'dot' and res == '1'))
             and abs(x1 - x) < 30)  # 10 is a magical number
 
 # detect if input two boundingBoxes are an equation mark
