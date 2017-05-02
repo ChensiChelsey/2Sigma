@@ -101,7 +101,7 @@ def predictint():
 
             updated_symbol_list = update(test_data, test_symbol_list)
             for updated_symbol in updated_symbol_list:
-                updated_nf.write("\t%s\t[%d, %d, %d, %d]\n" %(updated_symbol[1], updated_symbol[2], updated_symbol[3], updated_symbol[4], updated_symbol[5])) # write the result
+                updated_nf.write("\t%s\t[%d, %d, %d, %d]\n" %(updated_symbol[0], updated_symbol[1], updated_symbol[2], updated_symbol[3], updated_symbol[4]))
 
             equation = toLatex(updated_symbol_list)
             updated_nf.write("%s\n" %(equation)) # write the result
