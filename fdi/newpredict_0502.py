@@ -112,6 +112,11 @@ def predictint():
         print "see result is in updated_result.txt"
 #         print "Accuracy is ", (hit/float(number))
 
+def isDot(boundingBox):
+    (x, y), (xw, yh) = boundingBox
+    area = (yh - y) * (xw - x)
+    return area < 850 and 0.5 < (xw - x)/(yh - y) < 2 and abs(xw - x) < 40 and abs(yh - y) < 40  # 100 is migical number
+
 def imageprepare(image):
     im = image.convert('L')
     width = float(im.size[0])
@@ -143,16 +148,17 @@ def isDivisionMark(boundingBox, boundingBox1, boundingBox2, res, res1, res2):
     cenX2 = min(x2, xw2) + abs(xw2 - x2) / 2
     cenY1 = min(y1, yh1) + abs(yh1 - y1) / 2
     cenY2 = min(y2, yh2) + abs(yh2 - y2) / 2
-    caseBase = (res == '-' and res1 == 'dot' and res2 == 'dot')
-    caseRelation = x < x1 < xw1 < xw and x < x2 < xw2 < xw and max(cenY1, cenY2) > yh and min(cenY1, cenY2) < y
-    caseDistance = max(cenY1, cenY2) - min(cenY1, cenY2) < 1.5 * abs(yh - y)
+    #caseBase = (res == '-' and res1 == 'dot' and res2 == 'dot')
+    caseBase = (res == '-' and isDot(boundingBox1) and isDot(boundingBox2))
+    caseRelation = x < x1 < xw1 < xw and x < x2 < xw2 < xw # and max(cenY1, cenY2) > yh and min(cenY1, cenY2) < y
+    #caseDistance = max(cenY1, cenY2) - min(cenY1, cenY2) < 1.5 * abs(yh - y)
     return caseBase and caseRelation and caseDistance
 
 # detect if input two boundingBoxes are a lowercase i
 def isLetterI(boundingBox, boundingBox1, res, res1):
     (x, y), (xw, yh) = boundingBox
     (x1, y1), (xw1, yh1) = boundingBox1
-    return (((res == 'dot' and res1 == '1') or (res1 == 'dot' and res == '1'))
+    return (((isDot(boundingBox) and res1 == '1') or (isDot(boundingBox1) and res == '1'))
             and abs(x1 - x) < 30)  # 10 is a magical number
 
 # detect if input two boundingBoxes are an equation mark
@@ -173,7 +179,7 @@ def isDots(boundingBox, boundingBox1, boundingBox2, res, res1, res2):
     cenY = y + (yh - y) / 2
     cenY1 = y1 + (yh1 - y1) / 2
     cenY2 = y2 + (yh2 - y2) / 2
-    caseBase = res == 'dot' and res1 == 'dot' and res2 == 'dot'
+    caseBase = isDot(boundingBox) and isDot(boundingBox1) and isDot(boundingBox2)
     return caseBase and max(cenY, cenY1, cenY2) - min(cenY, cenY1, cenY2) < 50  # 30 is a migical number
 
 # detect if input two boundingBoxes are a plus-minus
