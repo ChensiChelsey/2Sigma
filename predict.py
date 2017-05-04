@@ -4,6 +4,24 @@ from PIL import Image, ImageFilter
 import os
 import pickle
 
+# variables
+steps = 5000
+batchSize = 124
+convolution = (1, 1)
+kennelSize = (2, 2)
+maxPoll = (2, 2)
+#Optimizer = AdamOptimizer
+#https://www.tensorflow.org/api_docs/python/tf/train/AdamOptimizer
+learningRate = 0.001
+layer1Feature = 16
+layer1Patch = 5, 5
+layer2Feature = 32
+layer2Patch = 5, 5
+hiddenLayer = 100  # the more hiddenLayer number, the less general the model will perform
+dropoffRate = 0.5  # reduce overfitting
+layer3Feature = 64
+layer3Patch = 5, 5
+
 sy = ['dots', 'tan', ')', '(', '+', '-', 'sqrt', '1', '0', '3', '2', '4', '6', 'mul', 'pi', '=', 'sin', 'pm', 'A',
 'frac', 'cos', 'delta', 'a', 'c', 'b', 'bar', 'd', 'f', 'i', 'h', 'k', 'm', 'o', 'n', 'p', 's', 't', 'y', 'x', 'div']
 brules = {}
@@ -28,34 +46,48 @@ def predictint():
       return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
 
     def max_pool_2x2(x):
-      return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+      return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
+                            strides=[1, 2, 2, 1], padding='SAME')
+    def max_pool_1x1(x):
+        return tf.nn.max_pool(x, ksize=[1, kennelSize[0], kennelSize[1], 1], strides=[1, 1, 1, 1], padding='SAME')
 
-    W_conv1 = weight_variable([5, 5, 1, 32])
-    b_conv1 = bias_variable([32])
+    # First Convolutional Layer
+    W_conv1 = weight_variable([layer1Patch[0], layer1Patch[1], 1, layer1Feature])
+    b_conv1 = bias_variable([layer1Feature])
 
-    x_image = tf.reshape(x, [-1,28,28,1])
+    x_image = tf.reshape(x, [-1, 28, 28, 1])
     h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
     h_pool1 = max_pool_2x2(h_conv1)
 
-    W_conv2 = weight_variable([5, 5, 32, 64])
-    b_conv2 = bias_variable([64])
+    # Second Convolutional Layer
+    W_conv2 = weight_variable([layer2Patch[0], layer2Patch[1], layer1Feature, layer2Feature])
+    b_conv2 = bias_variable([layer2Feature])
 
     h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
     h_pool2 = max_pool_2x2(h_conv2)
 
-    W_fc1 = weight_variable([7 * 7 * 64, 1024])
-    b_fc1 = bias_variable([1024])
+    # THIRD LAYER
+    W_conv3 = weight_variable([layer2Patch[0], layer3Patch[1], layer2Feature, layer3Feature])
+    b_conv3 = bias_variable([layer3Feature])
+    h_conv3 = tf.nn.relu(conv2d(h_pool2, W_conv3) + b_conv3)
+    h_pool3 = max_pool_1x1(h_conv3)
 
-    h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64])
-    h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+    # Densely Connected Layer
+    W_fc1 = weight_variable([7 * 7 * layer3Feature, hiddenLayer])  # hidden layer
+    b_fc1 = bias_variable([hiddenLayer])  # hidden layer
 
+    h_pool3_flat = tf.reshape(h_pool3, [-1, 7 * 7 * layer3Feature])
+    h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1) + b_fc1)
+
+    #dropout
     keep_prob = tf.placeholder(tf.float32)
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
-    W_fc2 = weight_variable([1024, 40])
+    #readout layer
+    W_fc2 = weight_variable([hiddenLayer, 40])
     b_fc2 = bias_variable([40])
 
-    y_conv=tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
+    y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
     init_op = tf.initialize_all_variables()
     saver = tf.train.Saver()
