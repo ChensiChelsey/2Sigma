@@ -1,4 +1,5 @@
 import boundingBox
+import predict_function as pf
 import sys
 import tensorflow as tf
 from PIL import Image, ImageFilter
@@ -10,7 +11,10 @@ import operator
 
 sy = ['dots', 'tan', ')', '(', '+', '-', 'sqrt', '1', '0', '3', '2', '4', '6', 'mul', 'pi', '=', 'sin', 'pm', 'A',
 'frac', 'cos', 'delta', 'a', 'c', 'b', 'bar', 'd', 'f', 'i', 'h', 'k', 'm', 'o', 'n', 'p', 's', 't', 'y', 'x', 'div']
+
 slash_sy = ['tan', 'sqrt', 'mul', 'pi', 'sin', 'pm', 'frac', 'cos', 'delta', 'bar', 'div','^','_']
+
+variable = ['1', '0', '3', '2', '4', '6', 'pi', 'A', 'a', 'c', 'b', 'd', 'f', 'i', 'h', 'k', 'm', 'o', 'n', 'p', 's', 't', 'y', 'x', '(', ')']
 brules = {}
 for i in range(0,len(sy)):
     brules[i] = sy[i]
@@ -88,7 +92,7 @@ def predictint():
             test_symbol_list = sorted(test_symbol_list, key=operator.itemgetter(2, 3))
             for i in range(len(test_symbol_list)):
                 test_symbol = test_symbol_list[i]
-                imvalue, image = imageprepare(test_symbol[0])
+                imvalue, image = pf.imageprepare(test_symbol[0])
                 prediction = tf.argmax(y_conv, 1)
                 predint = prediction.eval(feed_dict={x: [imvalue], keep_prob: 1.0}, session=sess)
                 if test_symbol[1] != "dot":
@@ -99,11 +103,11 @@ def predictint():
                 test_symbol_list[i] = test_symbol
                 nf.write("\t%s\t[%d, %d, %d, %d]\n" %(test_symbol[1], test_symbol[2], test_symbol[3], test_symbol[4], test_symbol[5])) # write the result
             
-            updated_symbol_list = update(test_data, test_symbol_list)
+            updated_symbol_list = pf.update(test_data, test_symbol_list)
             for updated_symbol in updated_symbol_list:
                 updated_nf.write("\t%s\t[%d, %d, %d, %d]\n" %(updated_symbol[1], updated_symbol[2], updated_symbol[3], updated_symbol[4], updated_symbol[5])) # write the result
                 
-            equation = toLatex(updated_symbol_list)
+            equation = pf.toLatex(updated_symbol_list)
             updated_nf.write("%s\n" %(equation)) # write the result
             
         nf.close()
@@ -111,121 +115,6 @@ def predictint():
         print "see result is in result.txt"
         print "see result is in updated_result.txt"
 #         print "Accuracy is ", (hit/float(number))
-
-def imageprepare(image):
-    im = image.convert('L')
-    width = float(im.size[0])
-    height = float(im.size[1])
-    newImage = Image.new('L', (28, 28), (0)) #creates black canvas of 28x28 pixels
-
-    if width > height: #check which dimension is bigger
-        nheight = int(round((28.0/width*height),0)) #resize height according to ratio width
-        img = im.resize((28,nheight), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
-        wtop = int(round(((28 - nheight)/2),0)) #caculate horizontal pozition
-        newImage.paste(img, (0, wtop)) #paste resized image
-    else:
-        nwidth = int(round((20.0/height*width),0)) #resize width according to ratio height
-        img = im.resize((nwidth,20), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
-        wleft = int(round(((28 - nwidth)/2),0)) #caculate vertical pozition
-        newImage.paste(img, (wleft, 4)) #paste resized image on
-    tv = list(newImage.getdata()) #get pixel values
-    #normalize pixels to 0 and 1. 0 is pure white, 1 is pure black.
-    tva = [ 1-(255-x)*1.0/255.0 for x in tv]
-    return tva, newImage
-
-def update(im_name, symbol_list):
-    im = Image.open(im_name)
-    list_len = len(symbol_list)
-    for i in range(list_len):
-        if i >= len(symbol_list): break
-        
-        symbol = symbol_list[i]
-        predict_result = symbol[1]
-        
-        # deal with equal mark
-        if predict_result == "-":
-            if i < (len(symbol_list) - 1):
-                s1 = symbol_list[i+1]
-                if s1[1] == "-" and ((s1[2] - symbol[2]) < 20 or (s1[4] - symbol[4]) < 20):
-                    new_x = min(symbol[2], s1[2])
-                    new_xw = max(symbol[3], s1[3])
-                    new_y = min(symbol[4], s1[4])
-                    new_yh = max(symbol[5], s1[5])
-                    new_symbol = (im.crop((new_x, new_y, new_xw, new_yh)), "=", new_x, new_y, new_xw, new_yh)
-                    symbol_list[i] = new_symbol
-                    symbol_list.pop(i+1)
-                    continue
-        
-        # deal with division mark
-        if predict_result == "-":
-            if i < (len(symbol_list) - 2):
-                s1 = symbol_list[i+1]
-                s2 = symbol_list[i+2] 
-                if s1[3] < symbol[3] and s2[3] > symbol[3] and (s2[2] - s1[2]) < 30 and (area(s1) < 1600 or area(s2) < 1600):
-                    new_x = min(symbol[2], s1[2], s2[2])
-                    new_xw = max(symbol[3], s1[3], s2[3])
-                    new_y = min(symbol[4], s1[4], s2[4])
-                    new_yh = max(symbol[5], s1[5], s2[5])
-                    new_symbol = (im.crop((new_x, new_y, new_xw, new_yh)), "div", new_x, new_y, new_xw, new_yh)
-                    symbol_list[i] = new_symbol
-                    symbol_list.pop(i+2)
-                    symbol_list.pop(i+1)
-                    continue
-        
-        # deal with dots
-        if predict_result == "dot":
-            if i < (len(symbol_list) - 2):
-                s1 = symbol_list[i+1]
-                s2 = symbol_list[i+2]
-                if symbol_list[i+1][1] == "dot" and symbol_list[i+2][1] == "dot":
-                    new_x = min(symbol[2], s1[2], s2[2])
-                    new_xw = max(symbol[3], s1[3], s2[3])
-                    new_y = min(symbol[4], s1[4], s2[4])
-                    new_yh = max(symbol[5], s1[5], s2[5])
-                    new_symbol = (im.crop((new_x, new_y, new_xw, new_yh)), "dots", new_x, new_y, new_xw, new_yh)
-                    symbol_list[i] = new_symbol
-                    symbol_list.pop(i+2)
-                    symbol_list.pop(i+1)
-                    continue
-        
-    return symbol_list
-
-def toLatex(symbol_list):
-    s = []
-    for i in range(len(symbol_list)):
-        symbol = symbol_list[i]
-        value = symbol[1]
-        
-        if value in slash_sy: 
-            s.append('\\' + value)
-        elif i > 0 and (s[len(s) - 1] in slash_sy): 
-            s.append('{'+value+'}')
-        elif i < len(symbol_list) - 1 and isUpperSymbol(symbol, symbol_list[i+1]): 
-            s.append(value)
-            s.append('^')
-        elif i < len(symbol_list) - 1 and isLowerSymbol(symbol, symbol_list[i+1]): 
-            s.append(value)
-            s.append('_')
-        else: 
-            s.append(value)
-    return "".join(s)
-                    
-def isUpperSymbol(cur, next):
-    cur_center = cur[3] + (cur[5] - cur[3])/2
-    next_center = next[3] + (next[5] - next[3])/2
-    cur_center_x = cur[2] + (cur[4] - cur[2])/2
-    if next_center < cur_center - (next[5] - next[3])/2 and next[2] > cur_center_x: return True
-    else: return False
-
-def isLowerSymbol(cur, next):
-    cur_center = cur[3] + (cur[5] - cur[3])/2
-    next_center = next[3] + (next[5] - next[3])/2
-    cur_center_x = cur[2] + (cur[4] - cur[2])/2
-    if next_center > cur_center + (next[5] - next[3])/2 and next[2] > cur_center_x: return True
-    else: return False
-
-def area(symbol):
-    return (symbol[4] - symbol[2]) * (symbol[5] - symbol[3])
 
 def main():
     predint = predictint()
